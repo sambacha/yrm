@@ -1,0 +1,29 @@
+(yenv) sbacha@Sams-MacBook-Pro:~/chad_bot$ cookiecutter https://github.com/tiangolo/full-stack-fastapi-postgresql
+You've downloaded /Users/sbacha/.cookiecutters/full-stack-fastapi-postgresql before. Is it okay to delete and re-download it? [yes]: yes
+project_name [Base Project]: fastapi-pgres
+project_slug [fastapi-pgres]:
+domain_main [fastapi-pgres.com]: yfinance.dev
+domain_staging [stag.yfinance.dev]:
+docker_swarm_stack_name_main [yfinance-dev]:
+docker_swarm_stack_name_staging [stag-yfinance-dev]:
+secret_key [changethis]: hunter2
+first_superuser [admin@yfinance.dev]: sam@freighttrust.com
+first_superuser_password [changethis]: hunter3
+backend_cors_origins [["http://localhost", "http://localhost:4200", "http://localhost:3000", "http://localhost:8080", "https://localhost", "https://localhost:4200", "https://localhost:3000", "https://localhost:8080", "http://dev.yfinance.dev", "https://stag.yfinance.dev", "https://yfinance.dev", "http://local.dockertoolbox.tiangolo.com", "http://localhost.tiangolo.com"]]:
+smtp_port [587]:
+smtp_host []:
+smtp_user []:
+smtp_password []:
+smtp_emails_from_email [info@yfinance.dev]:
+postgres_password [changethis]: power-edge-stump-goofy-alias-wafer-gave
+pgadmin_default_user [sam@freighttrust.com]:
+pgadmin_default_user_password [hunter3]: omen-paper-trek-mull-vice-mumbo-wifi
+traefik_constraint_tag [yfinance.dev]:
+traefik_constraint_tag_staging [stag.yfinance.dev]:
+traefik_public_constraint_tag [traefik-public]:
+flower_auth [admin:hunter3]:
+sentry_dsn []:
+docker_image_prefix []: sambacha
+docker_image_backend [sambachabackend]: sambacha-backened
+docker_image_celeryworker [sambachaceleryworker]: celeryworker
+docker_image_frontend [sambachafrontend]: frontend
