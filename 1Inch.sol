@@ -2,7 +2,6 @@ pragma solidity ^0.5.0;
 
 // Original: https://github.com/aave/aave-protocol/blob/master/contracts/flashloan/base/FlashLoanReceiverBase.sol
 
-
 /**
  * @dev Wrappers over Solidity's arithmetic operations with added overflow
  * checks.
@@ -57,7 +56,11 @@ library SafeMath {
      *
      * _Available since v2.4.0._
      */
-    function sub(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {
+    function sub(
+        uint256 a,
+        uint256 b,
+        string memory errorMessage
+    ) internal pure returns (uint256) {
         require(b <= a, errorMessage);
         uint256 c = a - b;
 
@@ -115,7 +118,11 @@ library SafeMath {
      *
      * _Available since v2.4.0._
      */
-    function div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {
+    function div(
+        uint256 a,
+        uint256 b,
+        string memory errorMessage
+    ) internal pure returns (uint256) {
         // Solidity only automatically asserts when dividing by 0
         require(b > 0, errorMessage);
         uint256 c = a / b;
@@ -152,7 +159,11 @@ library SafeMath {
      *
      * _Available since v2.4.0._
      */
-    function mod(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {
+    function mod(
+        uint256 a,
+        uint256 b,
+        string memory errorMessage
+    ) internal pure returns (uint256) {
         require(b != 0, errorMessage);
         return a % b;
     }
@@ -216,7 +227,11 @@ interface IERC20 {
      *
      * Emits a {Transfer} event.
      */
-    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) external returns (bool);
 
     /**
      * @dev Emitted when `value` tokens are moved from one account (`from`) to
@@ -245,7 +260,7 @@ library Address {
      * It is unsafe to assume that an address for which this function returns
      * false is an externally-owned account (EOA) and not a contract.
      *
-     * Among others, `isContract` will return false for the following 
+     * Among others, `isContract` will return false for the following
      * types of addresses:
      *
      *  - an externally-owned account
@@ -261,7 +276,9 @@ library Address {
         bytes32 codehash;
         bytes32 accountHash = 0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470;
         // solhint-disable-next-line no-inline-assembly
-        assembly { codehash := extcodehash(account) }
+        assembly {
+            codehash := extcodehash(account)
+        }
         return (codehash != accountHash && codehash != 0x0);
     }
 
@@ -302,7 +319,6 @@ library Address {
     }
 }
 
-
 /**
  * @title SafeERC20
  * @dev Wrappers around ERC20 operations that throw on failure (when the token
@@ -316,32 +332,55 @@ library SafeERC20 {
     using SafeMath for uint256;
     using Address for address;
 
-    function safeTransfer(IERC20 token, address to, uint256 value) internal {
+    function safeTransfer(
+        IERC20 token,
+        address to,
+        uint256 value
+    ) internal {
         callOptionalReturn(token, abi.encodeWithSelector(token.transfer.selector, to, value));
     }
 
-    function safeTransferFrom(IERC20 token, address from, address to, uint256 value) internal {
+    function safeTransferFrom(
+        IERC20 token,
+        address from,
+        address to,
+        uint256 value
+    ) internal {
         callOptionalReturn(token, abi.encodeWithSelector(token.transferFrom.selector, from, to, value));
     }
 
-    function safeApprove(IERC20 token, address spender, uint256 value) internal {
+    function safeApprove(
+        IERC20 token,
+        address spender,
+        uint256 value
+    ) internal {
         // safeApprove should only be called when setting an initial allowance,
         // or when resetting it to zero. To increase and decrease it, use
         // 'safeIncreaseAllowance' and 'safeDecreaseAllowance'
         // solhint-disable-next-line max-line-length
-        require((value == 0) || (token.allowance(address(this), spender) == 0),
+        require(
+            (value == 0) || (token.allowance(address(this), spender) == 0),
             "SafeERC20: approve from non-zero to non-zero allowance"
         );
         callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, value));
     }
 
-    function safeIncreaseAllowance(IERC20 token, address spender, uint256 value) internal {
+    function safeIncreaseAllowance(
+        IERC20 token,
+        address spender,
+        uint256 value
+    ) internal {
         uint256 newAllowance = token.allowance(address(this), spender).add(value);
         callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, newAllowance));
     }
 
-    function safeDecreaseAllowance(IERC20 token, address spender, uint256 value) internal {
-        uint256 newAllowance = token.allowance(address(this), spender).sub(value, "SafeERC20: decreased allowance below zero");
+    function safeDecreaseAllowance(
+        IERC20 token,
+        address spender,
+        uint256 value
+    ) internal {
+        uint256 newAllowance =
+            token.allowance(address(this), spender).sub(value, "SafeERC20: decreased allowance below zero");
         callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, newAllowance));
     }
 
@@ -366,7 +405,8 @@ library SafeERC20 {
         (bool success, bytes memory returndata) = address(token).call(data);
         require(success, "SafeERC20: low-level call failed");
 
-        if (returndata.length > 0) { // Return data is optional
+        if (returndata.length > 0) {
+            // Return data is optional
             // solhint-disable-next-line max-line-length
             require(abi.decode(returndata, (bool)), "SafeERC20: ERC20 operation did not succeed");
         }
@@ -377,17 +417,18 @@ library SafeERC20 {
 
 pragma solidity ^0.5.0;
 
-
-
 library UniversalERC20 {
-
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
     IERC20 private constant ZERO_ADDRESS = IERC20(0x0000000000000000000000000000000000000000);
     IERC20 private constant ETH_ADDRESS = IERC20(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
 
-    function universalTransfer(IERC20 token, address to, uint256 amount) internal returns(bool) {
+    function universalTransfer(
+        IERC20 token,
+        address to,
+        uint256 amount
+    ) internal returns (bool) {
         if (amount == 0) {
             return true;
         }
@@ -400,7 +441,12 @@ library UniversalERC20 {
         }
     }
 
-    function universalTransferFrom(IERC20 token, address from, address to, uint256 amount) internal {
+    function universalTransferFrom(
+        IERC20 token,
+        address from,
+        address to,
+        uint256 amount
+    ) internal {
         if (amount == 0) {
             return;
         }
@@ -433,7 +479,11 @@ library UniversalERC20 {
         }
     }
 
-    function universalApprove(IERC20 token, address to, uint256 amount) internal {
+    function universalApprove(
+        IERC20 token,
+        address to,
+        uint256 amount
+    ) internal {
         if (!isETH(token)) {
             if (amount == 0) {
                 token.safeApprove(to, 0);
@@ -459,43 +509,42 @@ library UniversalERC20 {
     }
 
     function universalDecimals(IERC20 token) internal view returns (uint256) {
-
         if (isETH(token)) {
             return 18;
         }
 
-        (bool success, bytes memory data) = address(token).staticcall.gas(10000)(
-            abi.encodeWithSignature("decimals()")
-        );
+        (bool success, bytes memory data) = address(token).staticcall.gas(10000)(abi.encodeWithSignature("decimals()"));
         if (!success || data.length == 0) {
-            (success, data) = address(token).staticcall.gas(10000)(
-                abi.encodeWithSignature("DECIMALS()")
-            );
+            (success, data) = address(token).staticcall.gas(10000)(abi.encodeWithSignature("DECIMALS()"));
         }
 
         return (success && data.length > 0) ? abi.decode(data, (uint256)) : 18;
     }
 
-    function isETH(IERC20 token) internal pure returns(bool) {
+    function isETH(IERC20 token) internal pure returns (bool) {
         return (address(token) == address(ZERO_ADDRESS) || address(token) == address(ETH_ADDRESS));
     }
 
-    function notExist(IERC20 token) internal pure returns(bool) {
+    function notExist(IERC20 token) internal pure returns (bool) {
         return (address(token) == address(-1));
     }
 }
 
-
 // Original: https://github.com/aave/aave-protocol/blob/master/contracts/flashloan/interfaces/IFlashLoanReceiver.sol
 
 /**
-* @title IFlashLoanReceiver interface
-* @notice Interface for the Aave fee IFlashLoanReceiver.
-* @author Aave
-* @dev implement this interface to develop a flashloan-compatible flashLoanReceiver contract
-**/
+ * @title IFlashLoanReceiver interface
+ * @notice Interface for the Aave fee IFlashLoanReceiver.
+ * @author Aave
+ * @dev implement this interface to develop a flashloan-compatible flashLoanReceiver contract
+ **/
 interface IFlashLoanReceiver {
-    function executeOperation(address _reserve, uint256 _amount, uint256 _fee, bytes calldata _params) external;
+    function executeOperation(
+        address _reserve,
+        uint256 _amount,
+        uint256 _fee,
+        bytes calldata _params
+    ) external;
 }
 
 // Original: https://github.com/aave/aave-protocol/blob/master/contracts/interfaces/ILendingPoolAddressesProvider.sol
@@ -506,55 +555,62 @@ interface IFlashLoanReceiver {
  */
 
 contract ILendingPoolAddressesProvider {
-
     function getLendingPool() public view returns (address);
+
     function setLendingPoolImpl(address _pool) public;
 
     function getLendingPoolCore() public view returns (address payable);
+
     function setLendingPoolCoreImpl(address _lendingPoolCore) public;
 
     function getLendingPoolConfigurator() public view returns (address);
+
     function setLendingPoolConfiguratorImpl(address _configurator) public;
 
     function getLendingPoolDataProvider() public view returns (address);
+
     function setLendingPoolDataProviderImpl(address _provider) public;
 
     function getLendingPoolParametersProvider() public view returns (address);
+
     function setLendingPoolParametersProviderImpl(address _parametersProvider) public;
 
     function getTokenDistributor() public view returns (address);
+
     function setTokenDistributor(address _tokenDistributor) public;
 
     function getFeeProvider() public view returns (address);
+
     function setFeeProviderImpl(address _feeProvider) public;
 
     function getLendingPoolLiquidationManager() public view returns (address);
+
     function setLendingPoolLiquidationManager(address _manager) public;
 
     function getLendingPoolManager() public view returns (address);
+
     function setLendingPoolManager(address _lendingPoolManager) public;
 
     function getPriceOracle() public view returns (address);
+
     function setPriceOracle(address _priceOracle) public;
 
     function getLendingRateOracle() public view returns (address);
-    function setLendingRateOracle(address _lendingRateOracle) public;
 
+    function setLendingRateOracle(address _lendingRateOracle) public;
 }
 
 // Original: https://github.com/aave/aave-protocol/blob/master/contracts/libraries/EthAddressLib.sol
 
 library EthAddressLib {
-
     /**
-    * @dev returns the address used within the protocol to identify ETH
-    * @return the address assigned to ETH
+     * @dev returns the address used within the protocol to identify ETH
+     * @return the address assigned to ETH
      */
-    function ethAddress() internal pure returns(address) {
+    function ethAddress() internal pure returns (address) {
         return 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE; // Represents ETH: https://docs.aave.com/developers/developing-on-aave/deployed-contract-instances#reserves-assets
     }
 }
-
 
 /*
  * @dev Provides information about the current execution context, including the
@@ -569,7 +625,8 @@ library EthAddressLib {
 contract Context {
     // Empty internal constructor, to prevent people from mistakenly deploying
     // an instance of this contract, which should be used via inheritance.
-    constructor () internal { }
+    constructor() internal {}
+
     // solhint-disable-previous-line no-empty-blocks
 
     function _msgSender() internal view returns (address payable) {
@@ -609,9 +666,9 @@ contract Context {
 contract ERC20 is Context, IERC20 {
     using SafeMath for uint256;
 
-    mapping (address => uint256) private _balances;
+    mapping(address => uint256) private _balances;
 
-    mapping (address => mapping (address => uint256)) private _allowances;
+    mapping(address => mapping(address => uint256)) private _allowances;
 
     uint256 private _totalSupply;
 
@@ -673,9 +730,17 @@ contract ERC20 is Context, IERC20 {
      * - the caller must have allowance for `sender`'s tokens of at least
      * `amount`.
      */
-    function transferFrom(address sender, address recipient, uint256 amount) public returns (bool) {
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) public returns (bool) {
         _transfer(sender, recipient, amount);
-        _approve(sender, _msgSender(), _allowances[sender][_msgSender()].sub(amount, "ERC20: transfer amount exceeds allowance"));
+        _approve(
+            sender,
+            _msgSender(),
+            _allowances[sender][_msgSender()].sub(amount, "ERC20: transfer amount exceeds allowance")
+        );
         return true;
     }
 
@@ -711,7 +776,11 @@ contract ERC20 is Context, IERC20 {
      * `subtractedValue`.
      */
     function decreaseAllowance(address spender, uint256 subtractedValue) public returns (bool) {
-        _approve(_msgSender(), spender, _allowances[_msgSender()][spender].sub(subtractedValue, "ERC20: decreased allowance below zero"));
+        _approve(
+            _msgSender(),
+            spender,
+            _allowances[_msgSender()][spender].sub(subtractedValue, "ERC20: decreased allowance below zero")
+        );
         return true;
     }
 
@@ -729,7 +798,11 @@ contract ERC20 is Context, IERC20 {
      * - `recipient` cannot be the zero address.
      * - `sender` must have a balance of at least `amount`.
      */
-    function _transfer(address sender, address recipient, uint256 amount) internal {
+    function _transfer(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) internal {
         require(sender != address(0), "ERC20: transfer from the zero address");
         require(recipient != address(0), "ERC20: transfer to the zero address");
 
@@ -787,7 +860,11 @@ contract ERC20 is Context, IERC20 {
      * - `owner` cannot be the zero address.
      * - `spender` cannot be the zero address.
      */
-    function _approve(address owner, address spender, uint256 amount) internal {
+    function _approve(
+        address owner,
+        address spender,
+        uint256 amount
+    ) internal {
         require(owner != address(0), "ERC20: approve from the zero address");
         require(spender != address(0), "ERC20: approve to the zero address");
 
@@ -803,7 +880,11 @@ contract ERC20 is Context, IERC20 {
      */
     function _burnFrom(address account, uint256 amount) internal {
         _burn(account, amount);
-        _approve(account, _msgSender(), _allowances[account][_msgSender()].sub(amount, "ERC20: burn amount exceeds allowance"));
+        _approve(
+            account,
+            _msgSender(),
+            _allowances[account][_msgSender()].sub(amount, "ERC20: burn amount exceeds allowance")
+        );
     }
 }
 
@@ -824,7 +905,7 @@ contract Ownable is Context {
     /**
      * @dev Initializes the contract setting the deployer as the initial owner.
      */
-    constructor () internal {
+    constructor() internal {
         address msgSender = _msgSender();
         _owner = msgSender;
         emit OwnershipTransferred(address(0), msgSender);
@@ -882,26 +963,20 @@ contract Ownable is Context {
     }
 }
 
-
 pragma solidity >=0.4.24;
-
 
 contract Withdrawable is Ownable {
     using SafeERC20 for ERC20;
     address constant ETHER = address(0);
 
-    event LogWithdraw(
-        address indexed _from,
-        address indexed _assetAddress,
-        uint amount
-    );
+    event LogWithdraw(address indexed _from, address indexed _assetAddress, uint256 amount);
 
     /**
      * @dev Withdraw asset.
      * @param _assetAddress Asset to be withdrawn.
      */
     function withdraw(address _assetAddress) public onlyOwner {
-        uint assetBalance;
+        uint256 assetBalance;
         if (_assetAddress == ETHER) {
             address self = address(this); // workaround for a possible solidity bug
             assetBalance = self.balance;
@@ -912,7 +987,6 @@ contract Withdrawable is Ownable {
         }
         emit LogWithdraw(msg.sender, _assetAddress, assetBalance);
     }
-
 }
 
 pragma solidity ^0.5.0;
@@ -927,26 +1001,29 @@ contract FlashLoanReceiverBase is IFlashLoanReceiver, Withdrawable {
         addressesProvider = ILendingPoolAddressesProvider(_addressProvider);
     }
 
-    function() external payable { }
+    function() external payable {}
 
     function transferFundsBackToPoolInternal(address _reserve, uint256 _amount) internal {
         address payable core = addressesProvider.getLendingPoolCore();
         transferInternal(core, _reserve, _amount);
     }
 
-    function transferInternal(address payable _destination, address _reserve, uint256 _amount) internal {
-        if(_reserve == EthAddressLib.ethAddress()) {
+    function transferInternal(
+        address payable _destination,
+        address _reserve,
+        uint256 _amount
+    ) internal {
+        if (_reserve == EthAddressLib.ethAddress()) {
             //solium-disable-next-line
             // _destination.call.value(_amount)("");
             _destination.transfer(_amount);
             return;
         }
         IERC20(_reserve).safeTransfer(_destination, _amount);
-        
     }
 
-    function getBalanceInternal(address _target, address _reserve) internal view returns(uint256) {
-        if(_reserve == EthAddressLib.ethAddress()) {
+    function getBalanceInternal(address _target, address _reserve) internal view returns (uint256) {
+        if (_reserve == EthAddressLib.ethAddress()) {
             return _target.balance;
         }
         return IERC20(_reserve).balanceOf(_target);
@@ -958,23 +1035,119 @@ contract FlashLoanReceiverBase is IFlashLoanReceiver, Withdrawable {
 pragma solidity ^0.5.0;
 
 interface ILendingPool {
-  function addressesProvider () external view returns ( address );
-  function deposit ( address _reserve, uint256 _amount, uint16 _referralCode ) external payable;
-  function redeemUnderlying ( address _reserve, address _user, uint256 _amount ) external;
-  function borrow ( address _reserve, uint256 _amount, uint256 _interestRateMode, uint16 _referralCode ) external;
-  function repay ( address _reserve, uint256 _amount, address _onBehalfOf ) external payable;
-  function swapBorrowRateMode ( address _reserve ) external;
-  function rebalanceFixedBorrowRate ( address _reserve, address _user ) external;
-  function setUserUseReserveAsCollateral ( address _reserve, bool _useAsCollateral ) external;
-  function liquidationCall ( address _collateral, address _reserve, address _user, uint256 _purchaseAmount, bool _receiveAToken ) external payable;
-  function flashLoan ( address _receiver, address _reserve, uint256 _amount, bytes calldata _params ) external;
-  function getReserveConfigurationData ( address _reserve ) external view returns ( uint256 ltv, uint256 liquidationThreshold, uint256 liquidationDiscount, address interestRateStrategyAddress, bool usageAsCollateralEnabled, bool borrowingEnabled, bool fixedBorrowRateEnabled, bool isActive );
-  function getReserveData ( address _reserve ) external view returns ( uint256 totalLiquidity, uint256 availableLiquidity, uint256 totalBorrowsFixed, uint256 totalBorrowsVariable, uint256 liquidityRate, uint256 variableBorrowRate, uint256 fixedBorrowRate, uint256 averageFixedBorrowRate, uint256 utilizationRate, uint256 liquidityIndex, uint256 variableBorrowIndex, address aTokenAddress, uint40 lastUpdateTimestamp );
-  function getUserAccountData ( address _user ) external view returns ( uint256 totalLiquidityETH, uint256 totalCollateralETH, uint256 totalBorrowsETH, uint256 availableBorrowsETH, uint256 currentLiquidationThreshold, uint256 ltv, uint256 healthFactor );
-  function getUserReserveData ( address _reserve, address _user ) external view returns ( uint256 currentATokenBalance, uint256 currentUnderlyingBalance, uint256 currentBorrowBalance, uint256 principalBorrowBalance, uint256 borrowRateMode, uint256 borrowRate, uint256 liquidityRate, uint256 originationFee, uint256 variableBorrowIndex, uint256 lastUpdateTimestamp, bool usageAsCollateralEnabled );
-  function getReserves () external view;
-}
+    function addressesProvider() external view returns (address);
 
+    function deposit(
+        address _reserve,
+        uint256 _amount,
+        uint16 _referralCode
+    ) external payable;
+
+    function redeemUnderlying(
+        address _reserve,
+        address _user,
+        uint256 _amount
+    ) external;
+
+    function borrow(
+        address _reserve,
+        uint256 _amount,
+        uint256 _interestRateMode,
+        uint16 _referralCode
+    ) external;
+
+    function repay(
+        address _reserve,
+        uint256 _amount,
+        address _onBehalfOf
+    ) external payable;
+
+    function swapBorrowRateMode(address _reserve) external;
+
+    function rebalanceFixedBorrowRate(address _reserve, address _user) external;
+
+    function setUserUseReserveAsCollateral(address _reserve, bool _useAsCollateral) external;
+
+    function liquidationCall(
+        address _collateral,
+        address _reserve,
+        address _user,
+        uint256 _purchaseAmount,
+        bool _receiveAToken
+    ) external payable;
+
+    function flashLoan(
+        address _receiver,
+        address _reserve,
+        uint256 _amount,
+        bytes calldata _params
+    ) external;
+
+    function getReserveConfigurationData(address _reserve)
+        external
+        view
+        returns (
+            uint256 ltv,
+            uint256 liquidationThreshold,
+            uint256 liquidationDiscount,
+            address interestRateStrategyAddress,
+            bool usageAsCollateralEnabled,
+            bool borrowingEnabled,
+            bool fixedBorrowRateEnabled,
+            bool isActive
+        );
+
+    function getReserveData(address _reserve)
+        external
+        view
+        returns (
+            uint256 totalLiquidity,
+            uint256 availableLiquidity,
+            uint256 totalBorrowsFixed,
+            uint256 totalBorrowsVariable,
+            uint256 liquidityRate,
+            uint256 variableBorrowRate,
+            uint256 fixedBorrowRate,
+            uint256 averageFixedBorrowRate,
+            uint256 utilizationRate,
+            uint256 liquidityIndex,
+            uint256 variableBorrowIndex,
+            address aTokenAddress,
+            uint40 lastUpdateTimestamp
+        );
+
+    function getUserAccountData(address _user)
+        external
+        view
+        returns (
+            uint256 totalLiquidityETH,
+            uint256 totalCollateralETH,
+            uint256 totalBorrowsETH,
+            uint256 availableBorrowsETH,
+            uint256 currentLiquidationThreshold,
+            uint256 ltv,
+            uint256 healthFactor
+        );
+
+    function getUserReserveData(address _reserve, address _user)
+        external
+        view
+        returns (
+            uint256 currentATokenBalance,
+            uint256 currentUnderlyingBalance,
+            uint256 currentBorrowBalance,
+            uint256 principalBorrowBalance,
+            uint256 borrowRateMode,
+            uint256 borrowRate,
+            uint256 liquidityRate,
+            uint256 originationFee,
+            uint256 variableBorrowIndex,
+            uint256 lastUpdateTimestamp,
+            bool usageAsCollateralEnabled
+        );
+
+    function getReserves() external view;
+}
 
 contract IOneSplitConsts {
     // flags = FLAG_DISABLE_UNISWAP + FLAG_DISABLE_BANCOR + ...
@@ -1048,7 +1221,6 @@ contract IOneSplitConsts {
     uint256 internal constant FLAG_DISABLE_MOONISWAP_POOL_TOKEN = 0x80000000000000000;
 }
 
-
 contract IOneSplit is IOneSplitConsts {
     function getExpectedReturn(
         IERC20 fromToken,
@@ -1056,13 +1228,7 @@ contract IOneSplit is IOneSplitConsts {
         uint256 amount,
         uint256 parts,
         uint256 flags // See constants in IOneSplit.sol
-    )
-        public
-        view
-        returns(
-            uint256 returnAmount,
-            uint256[] memory distribution
-        );
+    ) public view returns (uint256 returnAmount, uint256[] memory distribution);
 
     function getExpectedReturnWithGas(
         IERC20 fromToken,
@@ -1074,7 +1240,7 @@ contract IOneSplit is IOneSplitConsts {
     )
         public
         view
-        returns(
+        returns (
             uint256 returnAmount,
             uint256 estimateGasAmount,
             uint256[] memory distribution
@@ -1087,10 +1253,7 @@ contract IOneSplit is IOneSplitConsts {
         uint256 minReturn,
         uint256[] memory distribution,
         uint256 flags
-    )
-        public
-        payable
-        returns(uint256 returnAmount);
+    ) public payable returns (uint256 returnAmount);
 }
 
 contract IOneSplitMulti is IOneSplit {
@@ -1103,7 +1266,7 @@ contract IOneSplitMulti is IOneSplit {
     )
         public
         view
-        returns(
+        returns (
             uint256[] memory returnAmounts,
             uint256 estimateGasAmount,
             uint256[] memory distribution
@@ -1115,18 +1278,15 @@ contract IOneSplitMulti is IOneSplit {
         uint256 minReturn,
         uint256[] memory distribution,
         uint256[] memory flags
-    )
-        public
-        payable
-        returns(uint256 returnAmount);
+    ) public payable returns (uint256 returnAmount);
 }
 
 library Array {
-    function first(IERC20[] memory arr) internal pure returns(IERC20) {
+    function first(IERC20[] memory arr) internal pure returns (IERC20) {
         return arr[0];
     }
 
-    function last(IERC20[] memory arr) internal pure returns(IERC20) {
+    function last(IERC20[] memory arr) internal pure returns (IERC20) {
         return arr[arr.length - 1];
     }
 }
@@ -1140,40 +1300,38 @@ contract MyFlashloanContract is FlashLoanReceiverBase(address(0x24a42fD28C976A61
     using UniversalERC20 for IERC20;
     using Array for IERC20[];
 
-    address payable constant OneSplitAddress = 0x50FDA034C0Ce7a8f7EFDAebDA7Aa7cA21CC1267e;    
+    address payable constant OneSplitAddress = 0x50FDA034C0Ce7a8f7EFDAebDA7Aa7cA21CC1267e;
     address payable constant MyEth = 0x513E95Eec3bAC74802b4b2D859e802f17eAE57a9;
 
-    function _swap(address[] memory tokensA, uint256 amountWei, uint256[] memory distribution) internal  {
+    function _swap(
+        address[] memory tokensA,
+        uint256 amountWei,
+        uint256[] memory distribution
+    ) internal {
         IERC20[] memory tokens = new IERC20[](tokensA.length);
-        for (uint i=0; i<tokensA.length; i++) {
+        for (uint256 i = 0; i < tokensA.length; i++) {
             tokens[i] = IERC20(tokensA[i]);
         }
 
-        uint256[] memory flags = new uint256[](tokensA.length-1);
-        for (uint i=0; i<tokensA.length-1; i++) {
+        uint256[] memory flags = new uint256[](tokensA.length - 1);
+        for (uint256 i = 0; i < tokensA.length - 1; i++) {
             flags[i] = 0;
         }
 
-
-        if (tokens.first().isETH()){
-            (uint256 returnAmount) = IOneSplitMulti(OneSplitAddress).swapMulti.value(amountWei)(
-                tokens,
-                amountWei,
-                amountWei,
-                distribution,
-                flags
-            );
+        if (tokens.first().isETH()) {
+            uint256 returnAmount =
+                IOneSplitMulti(OneSplitAddress).swapMulti.value(amountWei)(
+                    tokens,
+                    amountWei,
+                    amountWei,
+                    distribution,
+                    flags
+                );
         } else {
             tokens.first().universalApprove(OneSplitAddress, amountWei);
-            (uint256 returnAmount) = IOneSplitMulti(OneSplitAddress).swapMulti(
-                tokens,
-                amountWei,
-                amountWei,
-                distribution,
-                flags
-            );
+            uint256 returnAmount =
+                IOneSplitMulti(OneSplitAddress).swapMulti(tokens, amountWei, amountWei, distribution, flags);
         }
-
     }
 
     function executeOperation(
@@ -1181,23 +1339,30 @@ contract MyFlashloanContract is FlashLoanReceiverBase(address(0x24a42fD28C976A61
         uint256 _amount,
         uint256 _fee,
         bytes calldata _params
-    )
-        external
-    {
-        require(_amount <= getBalanceInternal(address(this), _reserve), "Invalid balance, was the flashLoan successful?");
+    ) external {
+        require(
+            _amount <= getBalanceInternal(address(this), _reserve),
+            "Invalid balance, was the flashLoan successful?"
+        );
 
-        (address[] memory tokens,uint256 gas, uint256[] memory distribution) = abi.decode(_params, (address[],uint256,uint256[]));
-        
-        _swap(tokens, _amount.sub(gas) ,distribution);
-        
-        transferFundsBackToPoolInternal(_reserve, _amount.add(_fee));        
+        (address[] memory tokens, uint256 gas, uint256[] memory distribution) =
+            abi.decode(_params, (address[], uint256, uint256[]));
+
+        _swap(tokens, _amount.sub(gas), distribution);
+
+        transferFundsBackToPoolInternal(_reserve, _amount.add(_fee));
 
         // MyEth.transfer(getBalanceInternal(address(this), _reserve));
-        transferInternal(MyEth, _reserve, getBalanceInternal(address(this), _reserve) );
+        transferInternal(MyEth, _reserve, getBalanceInternal(address(this), _reserve));
     }
 
-    function flashloan(address[] memory tokens, uint256 amount, uint256 gas,  uint256[] memory distribution) public onlyOwner {
-        bytes memory data = abi.encode( tokens, gas, distribution);
+    function flashloan(
+        address[] memory tokens,
+        uint256 amount,
+        uint256 gas,
+        uint256[] memory distribution
+    ) public onlyOwner {
+        bytes memory data = abi.encode(tokens, gas, distribution);
         ILendingPool lendingPool = ILendingPool(addressesProvider.getLendingPool());
         lendingPool.flashLoan(address(this), tokens[0], amount, data);
     }

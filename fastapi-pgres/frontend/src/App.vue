@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <v-app>
-      <v-content v-if="loggedIn===null">
+      <v-content v-if="loggedIn === null">
         <v-container fill-height>
           <v-layout align-center justify-center>
             <v-flex>
@@ -20,10 +20,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import NotificationsManager from '@/components/NotificationsManager.vue';
-import { readIsLoggedIn } from '@/store/main/getters';
-import { dispatchCheckLoggedIn } from '@/store/main/actions';
+import { Component, Vue } from "vue-property-decorator";
+import NotificationsManager from "@/components/NotificationsManager.vue";
+import { readIsLoggedIn } from "@/store/main/getters";
+import { dispatchCheckLoggedIn } from "@/store/main/actions";
 
 @Component({
   components: {
@@ -31,7 +31,6 @@ import { dispatchCheckLoggedIn } from '@/store/main/actions';
   },
 })
 export default class App extends Vue {
-
   get loggedIn() {
     return readIsLoggedIn(this.$store);
   }

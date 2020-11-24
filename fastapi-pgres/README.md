@@ -2,23 +2,23 @@
 
 ## Backend Requirements
 
-* [Docker](https://www.docker.com/).
-* [Docker Compose](https://docs.docker.com/compose/install/).
-* [Poetry](https://python-poetry.org/) for Python package and environment management.
+- [Docker](https://www.docker.com/).
+- [Docker Compose](https://docs.docker.com/compose/install/).
+- [Poetry](https://python-poetry.org/) for Python package and environment management.
 
 ## Frontend Requirements
 
-* Node.js (with `npm`).
+- Node.js (with `npm`).
 
 ## Backend local development
 
-* Start the stack with Docker Compose:
+- Start the stack with Docker Compose:
 
 ```bash
 docker-compose up -d
 ```
 
-* Now you can open your browser and interact with these URLs:
+- Now you can open your browser and interact with these URLs:
 
 Frontend, built with Docker, with routes handled based on the path: http://localhost
 
@@ -151,6 +151,7 @@ Start the stack with this command:
 ```Bash
 DOMAIN=backend sh ./scripts/test-local.sh
 ```
+
 The `./backend/app` directory is mounted as a "host volume" inside the docker container (set in the file `docker-compose.dev.volumes.yml`).
 You can rerun the test on live code:
 
@@ -227,7 +228,7 @@ you can copy that URL and modify the "host" to be `localhost` or the domain you 
 http://localhost:8888/token=f20939a41524d021fbfc62b31be8ea4dd9232913476f4397
 ```
 
- and then open it in your browser.
+and then open it in your browser.
 
 You will have a full Jupyter Notebook running inside your container that has direct access to your database by the container name (`db`), etc. So, you can just run sections of your backend code directly, for example with [VS Code Python Jupyter Interactive Window](https://code.visualstudio.com/docs/python/jupyter-support-py) or [Hydrogen](https://github.com/nteract/hydrogen).
 
@@ -237,23 +238,23 @@ As during local development your app directory is mounted as a volume inside the
 
 Make sure you create a "revision" of your models and that you "upgrade" your database with that revision every time you change them. As this is what will update the tables in your database. Otherwise, your application will have errors.
 
-* Start an interactive session in the backend container:
+- Start an interactive session in the backend container:
 
 ```console
 $ docker-compose exec backend bash
 ```
 
-* If you created a new model in `./backend/app/app/models/`, make sure to import it in `./backend/app/app/db/base.py`, that Python module (`base.py`) that imports all the models will be used by Alembic.
+- If you created a new model in `./backend/app/app/models/`, make sure to import it in `./backend/app/app/db/base.py`, that Python module (`base.py`) that imports all the models will be used by Alembic.
 
-* After changing a model (for example, adding a column), inside the container, create a revision, e.g.:
+- After changing a model (for example, adding a column), inside the container, create a revision, e.g.:
 
 ```console
 $ alembic revision --autogenerate -m "Add column last_name to User model"
 ```
 
-* Commit to the git repository the files generated in the alembic directory.
+- Commit to the git repository the files generated in the alembic directory.
 
-* After creating the revision, run the migration in the database (this is what will actually change the database):
+- After creating the revision, run the migration in the database (this is what will actually change the database):
 
 ```console
 $ alembic upgrade head
@@ -311,11 +312,12 @@ In that case, you will need to use a fake local domain (`dev.yfinance.dev`) and 
 
 If you used the default CORS enabled domains, `dev.yfinance.dev` was configured to be allowed. If you want a custom one, you need to add it to the list in the variable `BACKEND_CORS_ORIGINS` in the `.env` file.
 
-* Open your `hosts` file with administrative privileges using a text editor:
-  * **Note for Windows**: If you are in Windows, open the main Windows menu, search for "notepad", right click on it, and select the option "open as Administrator" or similar. Then click the "File" menu, "Open file", go to the directory `c:\Windows\System32\Drivers\etc\`, select the option to show "All files" instead of only "Text (.txt) files", and open the `hosts` file.
-  * **Note for Mac and Linux**: Your `hosts` file is probably located at `/etc/hosts`, you can edit it in a terminal running `sudo nano /etc/hosts`.
+- Open your `hosts` file with administrative privileges using a text editor:
 
-* Additional to the contents it might have, add a new line with the custom IP (e.g. `192.168.99.150`) a space character, and your fake local domain: `dev.yfinance.dev`.
+  - **Note for Windows**: If you are in Windows, open the main Windows menu, search for "notepad", right click on it, and select the option "open as Administrator" or similar. Then click the "File" menu, "Open file", go to the directory `c:\Windows\System32\Drivers\etc\`, select the option to show "All files" instead of only "Text (.txt) files", and open the `hosts` file.
+  - **Note for Mac and Linux**: Your `hosts` file is probably located at `/etc/hosts`, you can edit it in a terminal running `sudo nano /etc/hosts`.
+
+- Additional to the contents it might have, add a new line with the custom IP (e.g. `192.168.99.150`) a space character, and your fake local domain: `dev.yfinance.dev`.
 
 The new line might look like:
 
@@ -323,8 +325,8 @@ The new line might look like:
 192.168.99.100    dev.yfinance.dev
 ```
 
-* Save the file.
-  * **Note for Windows**: Make sure you save the file as "All files", without an extension of `.txt`. By default, Windows tries to add the extension. Make sure the file is saved as is, without extension.
+- Save the file.
+  - **Note for Windows**: Make sure you save the file as "All files", without an extension of `.txt`. By default, Windows tries to add the extension. Make sure the file is saved as is, without extension.
 
 ...that will make your computer think that the fake local domain is served by that custom IP, and when you open that URL in your browser, it will talk directly to your locally running server when it is asked to go to `dev.yfinance.dev` and think that it is a remote server while it is actually running in your computer.
 
@@ -340,13 +342,13 @@ If you need to use your local stack with a different domain than `localhost`, yo
 
 To simplify your Docker Compose setup, for example, so that the API docs (Swagger UI) knows where is your API, you should let it know you are using that domain for development. You will need to edit 1 line in 2 files.
 
-* Open the file located at `./.env`. It would have a line like:
+- Open the file located at `./.env`. It would have a line like:
 
 ```
 DOMAIN=localhost
 ```
 
-* Change it to the domain you are going to use, e.g.:
+- Change it to the domain you are going to use, e.g.:
 
 ```
 DOMAIN=localhost.tiangolo.com
@@ -354,13 +356,13 @@ DOMAIN=localhost.tiangolo.com
 
 That variable will be used by the Docker Compose files.
 
-* Now open the file located at `./frontend/.env`. It would have a line like:
+- Now open the file located at `./frontend/.env`. It would have a line like:
 
 ```
 VUE_APP_DOMAIN_DEV=localhost
 ```
 
-* Change that line to the domain you are going to use, e.g.:
+- Change that line to the domain you are going to use, e.g.:
 
 ```
 VUE_APP_DOMAIN_DEV=localhost.tiangolo.com
@@ -378,7 +380,7 @@ and check all the corresponding available URLs in the section at the end.
 
 ## Frontend development
 
-* Enter the `frontend` directory, install the NPM packages and start the live server using the `npm` scripts:
+- Enter the `frontend` directory, install the NPM packages and start the live server using the `npm` scripts:
 
 ```bash
 cd frontend
@@ -403,7 +405,7 @@ VUE_APP_ENV=development
 # VUE_APP_ENV=staging
 ```
 
-* Switch the comment, to:
+- Switch the comment, to:
 
 ```
 # VUE_APP_ENV=development
@@ -414,9 +416,9 @@ VUE_APP_ENV=staging
 
 If you are developing an API-only app and want to remove the frontend, you can do it easily:
 
-* Remove the `./frontend` directory.
-* In the `docker-compose.yml` file, remove the whole service / section `frontend`.
-* In the `docker-compose.override.yml` file, remove the whole service / section `frontend`.
+- Remove the `./frontend` directory.
+- In the `docker-compose.yml` file, remove the whole service / section `frontend`.
+- In the `docker-compose.override.yml` file, remove the whole service / section `frontend`.
 
 Done, you have a frontend-less (api-only) app. 🔥 🚀
 
@@ -424,9 +426,9 @@ Done, you have a frontend-less (api-only) app. 🔥 🚀
 
 If you want, you can also remove the `FRONTEND` environment variables from:
 
-* `.env`
-* `.gitlab-ci.yml`
-* `./scripts/*.sh`
+- `.env`
+- `.gitlab-ci.yml`
+- `./scripts/*.sh`
 
 But it would be only to clean them up, leaving them won't really have any effect either way.
 
@@ -481,11 +483,11 @@ STACK_NAME=stag-yfinance-dev sh ./scripts/deploy.sh
 To use and expand that environment variable inside the `docker-compose.yml` files you can add the constraints to the services like:
 
 ```yaml
-version: '3'
+version: "3"
 services:
   db:
     volumes:
-      - 'app-db-data:/var/lib/postgresql/data/pgdata'
+      - "app-db-data:/var/lib/postgresql/data/pgdata"
     deploy:
       placement:
         constraints:
@@ -495,11 +497,11 @@ services:
 note the `${STACK_NAME?Variable not set}`. In the script `./scripts/deploy.sh`, the `docker-compose.yml` would be converted, and saved to a file `docker-stack.yml` containing:
 
 ```yaml
-version: '3'
+version: "3"
 services:
   db:
     volumes:
-      - 'app-db-data:/var/lib/postgresql/data/pgdata'
+      - "app-db-data:/var/lib/postgresql/data/pgdata"
     deploy:
       placement:
         constraints:
@@ -534,9 +536,9 @@ You can run that command every time you deploy, right before deploying, as it do
 
 If you don't want to use `docker-auto-labels` or for any reason you want to manually assign the constraint labels to specific nodes in your Docker Swarm mode cluster, you can do the following:
 
-* First, connect via SSH to your Docker Swarm mode cluster.
+- First, connect via SSH to your Docker Swarm mode cluster.
 
-* Then check the available nodes with:
+- Then check the available nodes with:
 
 ```console
 $ docker node ls
@@ -552,13 +554,13 @@ c4sdf2342asdfasd4234234ii     snake.example.com      Ready               Active 
 
 then chose a node from the list. For example, `dog.example.com`.
 
-* Add the label to that node. Use as label the name of the stack you are deploying followed by a dot (`.`) followed by the named volume, and as value, just `true`, e.g.:
+- Add the label to that node. Use as label the name of the stack you are deploying followed by a dot (`.`) followed by the named volume, and as value, just `true`, e.g.:
 
 ```bash
 docker node update --label-add yfinance-dev.app-db-data=true dog.example.com
 ```
 
-* Then you need to do the same for each stack version you have. For example, for staging you could do:
+- Then you need to do the same for each stack version you have. For example, for staging you could do:
 
 ```bash
 docker node update --label-add stag-yfinance-dev.app-db-data=true cat.example.com
@@ -578,10 +580,10 @@ Here are the steps in detail:
 
 1. **Build your app images**
 
-* Set these environment variables, right before the next command:
-  * `TAG=prod`
-  * `FRONTEND_ENV=production`
-* Use the provided `scripts/build.sh` file with those environment variables:
+- Set these environment variables, right before the next command:
+  - `TAG=prod`
+  - `FRONTEND_ENV=production`
+- Use the provided `scripts/build.sh` file with those environment variables:
 
 ```bash
 TAG=prod FRONTEND_ENV=production bash ./scripts/build.sh
@@ -593,10 +595,10 @@ TAG=prod FRONTEND_ENV=production bash ./scripts/build.sh
 
 If you are using a registry and pushing your images, you can omit running the previous script and instead using this one, in a single shot.
 
-* Set these environment variables:
-  * `TAG=prod`
-  * `FRONTEND_ENV=production`
-* Use the provided `scripts/build-push.sh` file with those environment variables:
+- Set these environment variables:
+  - `TAG=prod`
+  - `FRONTEND_ENV=production`
+- Use the provided `scripts/build-push.sh` file with those environment variables:
 
 ```bash
 TAG=prod FRONTEND_ENV=production bash ./scripts/build-push.sh
@@ -604,12 +606,12 @@ TAG=prod FRONTEND_ENV=production bash ./scripts/build-push.sh
 
 3. **Deploy your stack**
 
-* Set these environment variables:
-  * `DOMAIN=yfinance.dev`
-  * `TRAEFIK_TAG=yfinance.dev`
-  * `STACK_NAME=yfinance-dev`
-  * `TAG=prod`
-* Use the provided `scripts/deploy.sh` file with those environment variables:
+- Set these environment variables:
+  - `DOMAIN=yfinance.dev`
+  - `TRAEFIK_TAG=yfinance.dev`
+  - `STACK_NAME=yfinance-dev`
+  - `TAG=prod`
+- Use the provided `scripts/deploy.sh` file with those environment variables:
 
 ```bash
 DOMAIN=yfinance.dev \
@@ -666,8 +668,8 @@ If you use any other CI / CD provider, you can base your deployment from that `.
 
 GitLab CI is configured assuming 2 environments following GitLab flow:
 
-* `prod` (production) from the `production` branch.
-* `stag` (staging) from the `master` branch.
+- `prod` (production) from the `production` branch.
+- `stag` (staging) from the `master` branch.
 
 If you need to add more environments, for example, you could imagine using a client-approved `preprod` branch, you can just copy the configurations in `.gitlab-ci.yml` for `stag` and rename the corresponding variables. The Docker Compose file and environment variables are configured to support as many environments as you need, so that you only need to modify `.gitlab-ci.yml` (or whichever CI system configuration you are using).
 

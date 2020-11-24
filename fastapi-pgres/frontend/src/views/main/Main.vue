@@ -112,22 +112,22 @@
     </v-content>
     <v-footer class="pa-3" fixed app>
       <v-spacer></v-spacer>
-      <span>&copy; {{appName}}</span>
+      <span>&copy; {{ appName }}</span>
     </v-footer>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component } from "vue-property-decorator";
 
-import { appName } from '@/env';
-import { readDashboardMiniDrawer, readDashboardShowDrawer, readHasAdminAccess } from '@/store/main/getters';
-import { commitSetDashboardShowDrawer, commitSetDashboardMiniDrawer } from '@/store/main/mutations';
-import { dispatchUserLogOut } from '@/store/main/actions';
+import { appName } from "@/env";
+import { readDashboardMiniDrawer, readDashboardShowDrawer, readHasAdminAccess } from "@/store/main/getters";
+import { commitSetDashboardShowDrawer, commitSetDashboardMiniDrawer } from "@/store/main/mutations";
+import { dispatchUserLogOut } from "@/store/main/actions";
 
 const routeGuardMain = async (to, from, next) => {
-  if (to.path === '/main') {
-    next('/main/dashboard');
+  if (to.path === "/main") {
+    next("/main/dashboard");
   } else {
     next();
   }
@@ -158,17 +158,11 @@ export default class Main extends Vue {
   }
 
   public switchShowDrawer() {
-    commitSetDashboardShowDrawer(
-      this.$store,
-      !readDashboardShowDrawer(this.$store),
-    );
+    commitSetDashboardShowDrawer(this.$store, !readDashboardShowDrawer(this.$store));
   }
 
   public switchMiniDrawer() {
-    commitSetDashboardMiniDrawer(
-      this.$store,
-      !readDashboardMiniDrawer(this.$store),
-    );
+    commitSetDashboardMiniDrawer(this.$store, !readDashboardMiniDrawer(this.$store));
   }
 
   public get hasAdminAccess() {
