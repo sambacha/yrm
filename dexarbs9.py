@@ -6,9 +6,8 @@ import time
 import pprint
 import sys
 
-acct = accounts.load('arbAccount')
-one_inch_split_abi = json.load(
-    open('scripts/abi/IOneSplitMulti_old.json', 'r'))
+acct = accounts.load("arbAccount")
+one_inch_split_abi = json.load(open("scripts/abi/IOneSplitMulti_old.json", "r"))
 
 # 20 ether in wei
 loan = "20000000000000000000"
@@ -21,18 +20,20 @@ AAVE_LENDING_POOL_ADDRESS_PROVIDER = "0x24a42fD28C976A61Df5D00D0599C34c4f90748c8
 OneSplitAddress = "0x50FDA034C0Ce7a8f7EFDAebDA7Aa7cA21CC1267e"
 
 one_inch_split_contract = web3.toChecksumAddress(
-    OneSplitAddress)  # 1 inch split contract
+    OneSplitAddress
+)  # 1 inch split contract
 
 # load our contract
 one_inch_join = web3.eth.contract(
-    address=one_inch_split_contract, abi=one_inch_split_abi)
+    address=one_inch_split_contract, abi=one_inch_split_abi
+)
 
 markets = {}
 blacklist = []
-blacklist.append('CHAI-ETH')
-blacklist.append('CHAI-USDT')
-blacklist.append('CHAI-DAI')
-blacklist.append('CHAI-USDC')
+blacklist.append("CHAI-ETH")
+blacklist.append("CHAI-USDT")
+blacklist.append("CHAI-DAI")
+blacklist.append("CHAI-USDC")
 
 
 ercAddresses = {}
@@ -40,26 +41,26 @@ contracts = {}
 priceOfETH = {}
 
 baseAssets = [
-    'ETH',
-    'DAI',
-    'USDC',
-    'SUSD',
-    'TUSD',
-    'USDT',
-    'BUSD',
-    'BAT',
-    'ENJ',
-    'KNC',
-    'LEND',
-    'LINK',
+    "ETH",
+    "DAI",
+    "USDC",
+    "SUSD",
+    "TUSD",
+    "USDT",
+    "BUSD",
+    "BAT",
+    "ENJ",
+    "KNC",
+    "LEND",
+    "LINK",
     # 'MANA',
-    'MKR',
-    'REN',
+    "MKR",
+    "REN",
     # 'REP',
-    'SNX',
-    'WBTC',
-    'YFI',
-    'ZRX'
+    "SNX",
+    "WBTC",
+    "YFI",
+    "ZRX",
 ]
 
 gasPrice = 0
@@ -69,22 +70,23 @@ prices = {}
 def getPrices():
     global prices
     priceData = requests.get(
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eth")
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eth"
+    )
     pricesInfo = priceData.json()
     for priceItem in pricesInfo:
-        sym = priceItem['symbol'].upper()
+        sym = priceItem["symbol"].upper()
         if sym in baseAssets:
-            prices[sym] = priceItem['current_price']
+            prices[sym] = priceItem["current_price"]
     pprint.pprint(prices)
 
 
 def arb(tokens, _loan, gascost, distribution):
     # add your keystore ID as an argument to this call
-    print('Attempting flashloan')
+    print("Attempting flashloan")
     bal = acct.balance()
     print(bal)
     print(gascost)
-    tx = 'No tx'
+    tx = "No tx"
     # hard code gas less than 0.04 ether
     if bal > 4 * gascost and gascost < 50000000000000000 and gasPrice > 0:
         print(tokens)
@@ -93,18 +95,19 @@ def arb(tokens, _loan, gascost, distribution):
         print(gas)
         flashloan = MyFlashloanContract[1]
         tx = flashloan.flashloan(
-            tokens, _loan, gascost * 4, distribution, {"from": acct, "gas": gas})
+            tokens, _loan, gascost * 4, distribution, {"from": acct, "gas": gas}
+        )
         sys.exit()
     return tx
 
 
 def arbAlt(tokens, _loan, gascost, distribution):
     # add your keystore ID as an argument to this call
-    print('Attempting flashloan')
+    print("Attempting flashloan")
     bal = acct.balance()
     print(bal)
     print(gascost)
-    tx = 'No tx'
+    tx = "No tx"
     # hard code gas less than 0.04 ether
     if bal > 4 * gascost and gascost < 50000000000000000 and gasPrice > 0:
         print(tokens)
@@ -113,7 +116,8 @@ def arbAlt(tokens, _loan, gascost, distribution):
         print(gas)
         flashloan = MyFlashloanContract[1]
         tx = flashloan.flashloan(
-            tokens, _loan, 0, distribution, {"from": acct, "gas": gas})
+            tokens, _loan, 0, distribution, {"from": acct, "gas": gas}
+        )
         sys.exit()
     return tx
 
@@ -121,7 +125,7 @@ def arbAlt(tokens, _loan, gascost, distribution):
 def getGasPrice():
     global gasPrice
     gasPrice = web3.eth.gasPrice
-    print('Gas price: ', gasPrice)
+    print("Gas price: ", gasPrice)
 
 
 def getGasPrice2():
@@ -173,15 +177,18 @@ def arbcheck():
         if process == True:
 
             # if base in baseAssets:
-            if base == 'ETH':
+            if base == "ETH":
 
                 try:
                     baseAddress = contracts[base]
                     quoteAddress = contracts[quote]
                     tokens = [baseAddress, quoteAddress, baseAddress]
                     # make call request to contract on the Ethereum blockchain
-                    contract_response = one_inch_join.functions.getExpectedReturnWithGasMulti(
-                        tokens, _loan, [parts, parts], [0, 0], [0, 0]).call({'from': str(acct)})
+                    contract_response = (
+                        one_inch_join.functions.getExpectedReturnWithGasMulti(
+                            tokens, _loan, [parts, parts], [0, 0], [0, 0]
+                        ).call({"from": str(acct)})
+                    )
 
                     retAmount = contract_response[0][-1]
                     if retAmount > _loan:
@@ -205,15 +212,18 @@ def arbcheck():
                 except Exception as e:
                     print("An exception occurred", marketname)
                     print(e)
-            elif quote == 'ETH':
+            elif quote == "ETH":
 
                 try:
                     baseAddress = contracts[quote]
                     quoteAddress = contracts[base]
                     tokens = [baseAddress, quoteAddress, baseAddress]
                     # make call request to contract on the Ethereum blockchain
-                    contract_response = one_inch_join.functions.getExpectedReturnWithGasMulti(
-                        tokens, _loan, [parts, parts], [0, 0], [0, 0]).call({'from': str(acct)})
+                    contract_response = (
+                        one_inch_join.functions.getExpectedReturnWithGasMulti(
+                            tokens, _loan, [parts, parts], [0, 0], [0, 0]
+                        ).call({"from": str(acct)})
+                    )
 
                     retAmount = contract_response[0][-1]
                     if retAmount > _loan:
@@ -252,11 +262,13 @@ def arbcheck():
                         quoteAddress = contracts[base]
                         _altloan = int(_loan / prices[quote])
                         _mult = 1 / prices[quote]
-                    tokens = [baseAddress,
-                              quoteAddress, baseAddress]
+                    tokens = [baseAddress, quoteAddress, baseAddress]
                     # make call request to contract on the Ethereum blockchain
-                    contract_response = one_inch_join.functions.getExpectedReturnWithGasMulti(
-                        tokens, _altloan, [parts, parts], [0, 0], [0, 0]).call({'from': str(acct)})
+                    contract_response = (
+                        one_inch_join.functions.getExpectedReturnWithGasMulti(
+                            tokens, _altloan, [parts, parts], [0, 0], [0, 0]
+                        ).call({"from": str(acct)})
+                    )
 
                     retAmount = contract_response[0][-1]
                     if retAmount > _altloan:
@@ -264,12 +276,12 @@ def arbcheck():
                         distribution = contract_response[2]
                         # getGasPrice()
                         gascost = estGas * gasPrice
-                        arb2 = 100 * (retAmount - _altloan -
-                                      (gascost * _mult)) / _altloan
+                        arb2 = (
+                            100 * (retAmount - _altloan - (gascost * _mult)) / _altloan
+                        )
                         print(base, quote, arb2)
                         if arb2 > altarbMargin:
-                            tx = arbAlt(tokens, _altloan,
-                                        gascost, distribution)
+                            tx = arbAlt(tokens, _altloan, gascost, distribution)
                             print(tx)
                     elif (100 * (retAmount - _altloan) / _altloan) < -90:
                         blacklist.append(marketname)
